@@ -12,20 +12,21 @@ import {
   type AlertDialogContentProps,
 } from '@/components/animate-ui/components/radix/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea'; // Importe o Textarea
+import { Textarea } from '@/components/ui/textarea';
 
 interface RadixAlertDialogProps {
   from: AlertDialogContentProps['from'];
   triggerLabel?: string;
-  title: string;
+  title?: string;
   description: string;
-  description2:string;
+  description2?: string;
   cancelLabel?: string;
   actionLabel?: string;
-  onAction?: (text: string) => void; // Agora recebe o texto do textarea
+  onAction?: (text: string) => void;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  initialText?: string; // Opcional: valor inicial do textarea
+  initialComment?: string; // nome atualizado p/ bater com seu uso
+  children?: React.ReactNode; // <== 🔹 adicionado para aceitar conteúdo interno
 }
 
 export const RadixAlertDialog = ({
@@ -33,21 +34,21 @@ export const RadixAlertDialog = ({
   title,
   description,
   description2,
-  cancelLabel = 'Cancel',
-  actionLabel = 'Continue',
+  cancelLabel = 'Cancelar',
+  actionLabel = 'Continuar',
   onAction,
   open,
   onOpenChange,
-  initialText = '',
+  initialComment = '',
+  children,
 }: RadixAlertDialogProps) => {
-  const [text, setText] = React.useState(initialText);
+  const [text, setText] = React.useState(initialComment);
 
-  
   React.useEffect(() => {
     if (!open) {
-      setText(initialText);
+      setText(initialComment);
     }
-  }, [open, initialText]);
+  }, [open, initialComment]);
 
   const handleAction = () => {
     onAction?.(text);
@@ -57,12 +58,18 @@ export const RadixAlertDialog = ({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent from={from} className="sm:max-w-[425px]">
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
-          <AlertDialogDescription>{description2}</AlertDialogDescription>
+          {title && <AlertDialogTitle>{title}</AlertDialogTitle>}
+          {description && (
+            <AlertDialogDescription>{description}</AlertDialogDescription>
+          )}
+          {description2 && (
+            <AlertDialogDescription>{description2}</AlertDialogDescription>
+          )}
         </AlertDialogHeader>
 
-        {/* Textarea adicionado aqui */}
+        {/* 🔹 children renderizados aqui */}
+        {children && <div className="mb-3">{children}</div>}
+
         <div className="py-4">
           <Textarea
             placeholder="Digite sua mensagem aqui..."

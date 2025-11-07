@@ -7,12 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { RadixAlertDialog } from "@/components/alert-dialog2";
 import { ArrowLeft, Check, X, FileText, Loader2 } from "lucide-react";
 import React from "react";
-import { getcotacoes, Cotacao, escolher, desescolher } from "@/lib/data3";
+import { getcotacoes, Cotacao, escolher, desescolher, Cotacaos } from "@/lib/data3";
 import { Textarea } from "@/components/ui/textarea"
-export default function CotacaoDetailPage({ params }: { params: Promise<{ id: string }> }) {
+
+
+export default function CotacaoDetailPage({ params }: { params: Promise<{ id: string }> }){
   const { id } = React.use(params);
   const router = useRouter();
-  const [cotacoes, setCotacoes] = useState<Cotacao[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [timeoutReached, setTimeoutReached] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState(false);
@@ -20,25 +22,48 @@ export default function CotacaoDetailPage({ params }: { params: Promise<{ id: st
   const [isDeselection, setIsDeselection] = useState(false);
   const [comment, setComment] = useState('');
 
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    async function carregar() {
-      try {
-        const result = await getcotacoes(id);
-        setCotacoes(result);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    carregar();
 
-    timeoutId = setTimeout(() => {
-      setTimeoutReached(true);
+  const [cotacoes, setCotacoes] = useState<Cotacao[]>( [{
+  id: 0,
+  numero_cotacao: 0,
+  fornecedor: 'string',
+  valor_cotado: 0,
+  condicoes_pagamento: 'string',
+  data_cotacao: 'string',
+    marca: 'string',
+    observacoes: 'string',
+    item_desenvolvido: true,
+    iditem: 0,
+    escolhido:0,
+    status:0,
+    marca_amostra:'string',
+    prazo_entrega:'string',
+}]
+
+);
+useEffect(() => {
+  let timeoutId: NodeJS.Timeout;
+
+  async function carregar() {
+    try {
+      const idd =parseInt(id)
+      const result = await getcotacoes(idd) as Cotacao[]; 
+      setCotacoes(result); 
+    } finally {
       setIsLoading(false);
-    }, 3000);
+    }
+  }
 
-    return () => clearTimeout(timeoutId);
-  }, [id]);
+  carregar();
+
+  timeoutId = setTimeout(() => {
+    setTimeoutReached(true);
+    setIsLoading(false);
+  }, 3000);
+
+  return () => clearTimeout(timeoutId);
+}, [id]);
+
 
   const handleApprove = async (id: number,coment:string) => {
     setConfirmDialog(false);
@@ -47,7 +72,7 @@ export default function CotacaoDetailPage({ params }: { params: Promise<{ id: st
     } else {
       await desescolher(id,coment);
     }
-    const result = await getcotacoes(id);
+    const result = await getcotacoes(id) as Cotacao[];
     setCotacoes(result);
     setSelectedCotacao(null);
   };
@@ -76,15 +101,15 @@ export default function CotacaoDetailPage({ params }: { params: Promise<{ id: st
   }
 
 
-  const statusBadge = (status: string) => {
-    if (status === "approved")
+  const statusBadge = (status: number) => {
+    if (status === 1)
       return (
         <Badge className="bg-primary">
           <Check className="h-3 w-3 mr-1" />
           Aprovada
         </Badge>
       );
-    if (status === "rejected")
+    if (status === 0)
       return (
         <Badge variant="destructive">
           <X className="h-3 w-3 mr-1" />
@@ -172,7 +197,7 @@ export default function CotacaoDetailPage({ params }: { params: Promise<{ id: st
                   </div>
                 )}
 
-                {cotacao.status === "pending" && (
+                {cotacao.status === 1 && (
                   <div className="flex gap-3 mt-6">
                     <Button
                       onClick={() => setConfirmDialog(true)}

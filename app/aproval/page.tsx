@@ -22,7 +22,7 @@ export default function ProdutosPage() {
 
     async function fetchData() {
       try {
-        const result = await getData();
+        const result = await getData() as Item[];
         setProdutos(result);
       } finally {
         setIsLoading(false);

@@ -2,6 +2,78 @@
 
 import { neon } from "@neondatabase/serverless";
 
+
+
+export interface Cotacao {
+  id: number
+  numero_cotacao: number
+  fornecedor: string
+  valor_cotado: number
+  condicoes_pagamento: string
+  data_cotacao: string,
+    marca: string,
+    observacoes: string,
+    item_desenvolvido: true,
+    iditem: number
+    escolhido:number
+    status:number
+    marca_amostra:string
+    prazo_entrega:string
+}
+
+
+
+
+export interface Cotacaos {
+  id: number
+  numero_cotacao: number
+  fornecedor: string
+  precoCotado: number
+  condicoesPagamento: string
+  dataCotacao: string,
+    marca: string,
+    observacoes: string,
+    item_desenvolvido: true,
+    iditem: number
+}
+
+export interface Version {
+  id: string
+  versionNumber: string
+  descricao: string
+  createdAt: string
+  author: string
+  changes: string[]
+  escolhido:number
+  status: "pending" | "approved" | "rejected"
+}
+
+export interface Item {
+  id: string
+  iditem:number
+  sku:string
+  aplicacao:string
+  frota_sku:string
+  name: string
+  familia: string
+  descricao: string
+  cotacoes: Version[]
+  approvedVersionId?: string
+}
+
+interface Item2 {
+  peca: string
+  familia: string
+  comentario: string
+  aplicacao:string
+  chaveamento: string
+  sku:string
+  motor: string 
+  frota_sku:string
+}
+
+
+
 // Example usage (add your DATABASE_URL env var)
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -48,76 +120,20 @@ export async function getData2() {
 }
 
 
-export async function getcotacoes(id:number,) {
-  const cotacoes = await sql`SELECT * FROM cotacoes WHERE iditem = ${id} and sendprov=1`; 
-  console.log(cotacoes);
-  return cotacoes;
+export async function getcotacoes(id: number) {
+  const rows= await sql`SELECT * FROM cotacoes WHERE iditem = ${id} and sendprov = 1`;
+  
+  console.log(rows)
+  
+  return rows; // retorna só as linhas
 }
 
-export async function getcotacoes2(id:number,) {
+
+export async function getcotacoes2(id:number) {
   const cotacoes = await sql`SELECT * FROM cotacoes WHERE iditem = ${id} `; 
   console.log(cotacoes);
   return cotacoes;
 }
-
-
-export interface Cotacao {
-  id: number
-  numero_cotacao: number
-  fornecedor: string
-  valor_cotado: number
-  condicoes_pagamento: string
-  data_cotacao: string,
-    marca: string,
-    observacoes: string,
-    item_desenvolvido: true,
-    iditem: number
-}
-
-
-export interface Cotacaos {
-  id: number
-  numero_cotacao: number
-  fornecedor: string
-  precoCotado: number
-  condicoesPagamento: string
-  dataCotacao: string,
-    marca: string,
-    observacoes: string,
-    item_desenvolvido: true,
-    iditem: number
-}
-
-export interface Version {
-  id: string
-  versionNumber: string
-  descricao: string
-  createdAt: string
-  author: string
-  changes: string[]
-  status: "pending" | "approved" | "rejected"
-}
-
-export interface Item {
-  id: string
-  name: string
-  familia: string
-  descricao: string
-  cotacoes: Version[]
-  approvedVersionId?: string
-}
-
-interface Item2 {
-  peca: string
-  familia: string
-  comentario: string
-  aplicacao:string
-  chaveamento: string
-  sku:string
-  motor: string 
-  frota_sku:string
-}
-
 
 
 
