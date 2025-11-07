@@ -205,7 +205,7 @@ export async function enviarCotacao(cotacao: Cotacaos, item: Item2) {
     `;
       return { success: false, message: 'SKU já cadastrado', sku: item.sku };
     }else{
-      const c= await sql`
+      const result= await sql`
           INSERT INTO produtos (
             peca, familia, comentario, aplicacao, chaveamento, sku, motor, frota_sku
           ) VALUES (
@@ -225,8 +225,7 @@ export async function enviarCotacao(cotacao: Cotacaos, item: Item2) {
 
 
 
-    console.log('Cotação inserida com sucesso:', result);
-    return { success: true, data: result };
+    return { success: true };
 
   } catch (error) {
     console.error('Erro ao processar cotação:', error);
