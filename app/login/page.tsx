@@ -1,9 +1,6 @@
 "use client"
 
 import { LoginForm } from "@/components/login-form"
-import { getData} from "@/lib/databaseneon"
-import { useEffect, useState } from "react";
-
 
 export default function LoginPage() {
 
