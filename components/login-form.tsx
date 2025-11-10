@@ -58,7 +58,7 @@ export   function LoginForm() {
 
       const emailSalvo = localStorage.getItem("email");
       console.log("Email salvo localmente:", emailSalvo);
-      window.location.href='/aproval'
+    redirect("/aproval");
 
     }
     else{
