@@ -91,9 +91,7 @@ export async  function LoginForm() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="password">Senha</Label>
-              <Link href="/recuperar-senha" className="text-sm text-muted-foreground hover:text-primary">
-                Esqueceu a senha?
-              </Link>
+
             </div>
             <Input
               id="password"
