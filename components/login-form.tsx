@@ -44,8 +44,7 @@ export   function LoginForm() {
       localStorage.setItem("type", user[0].usertype);
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // const emailSalvo = localStorage.getItem("email");
-      // console.log("Email salvo localmente:", emailSalvo);
+      
       
     }
 
