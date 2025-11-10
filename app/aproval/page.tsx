@@ -8,8 +8,17 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChevronRight, Package, Search, Loader2 } from "lucide-react";
 import { getData, type Item } from "@/lib/data3";
+import { useRouter } from "next/navigation";
 
-export default function ProdutosPage() {
+import { redirect } from "next/navigation";
+import { isUserLoggedIn } from "@/lib/auth";
+
+
+
+
+
+export default   function ProdutosPage() {
+  const router=useRouter()
   const [produtos, setProdutos] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [timeoutReached, setTimeoutReached] = useState(false);
@@ -17,16 +26,27 @@ export default function ProdutosPage() {
   const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "approved">("all");
   const [familiaFilter, setFamiliaFilter] = useState<string>("all");
 
+
+
+  
+
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
-    async function fetchData() {
+    async function fetchData() {      
+    const loggedIn = await isUserLoggedIn();
+
+
       try {
         const result = await getData() as Item[];
         setProdutos(result);
       } finally {
         setIsLoading(false);
       }
+        if (!loggedIn) {
+    redirect("/login");
+  }
+
     }
 
     fetchData();

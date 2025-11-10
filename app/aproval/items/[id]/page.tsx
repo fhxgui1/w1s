@@ -11,6 +11,13 @@ import { getcotacoes, Cotacao, escolher, desescolher, Cotacaos } from "@/lib/dat
 import { Textarea } from "@/components/ui/textarea"
 
 
+import { redirect } from "next/navigation";
+import { isUserLoggedIn } from "@/lib/auth";
+
+
+
+
+
 export default function CotacaoDetailPage({ params }: { params: Promise<{ id: string }> }){
   const { id } = React.use(params);
   const router = useRouter();
@@ -41,10 +48,15 @@ export default function CotacaoDetailPage({ params }: { params: Promise<{ id: st
 }]
 
 );
+
 useEffect(() => {
   let timeoutId: NodeJS.Timeout;
+  
 
   async function carregar() {
+    
+    const loggedIn = await isUserLoggedIn();
+
     try {
       const idd =parseInt(id)
       const result = await getcotacoes(idd) as Cotacao[]; 
@@ -52,6 +64,10 @@ useEffect(() => {
     } finally {
       setIsLoading(false);
     }
+  if (!loggedIn) {
+    redirect("/login");
+  }
+  
   }
 
   carregar();

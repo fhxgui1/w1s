@@ -9,12 +9,23 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import {getData,getUserByEmail} from "@/lib/databaseneon"
+import { useRouter } from "next/navigation";
+import {setLoginCookie} from "@/lib/auth"
 
-export  function LoginForm() {
+import { redirect } from "next/navigation";
+import { isUserLoggedIn } from "@/lib/auth";
+
+
+
+export async  function LoginForm() {
+  const router=useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   
+
+
+
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,18 +33,21 @@ export  function LoginForm() {
     setIsLoading(true);
 
     console.log("[v0] Login attempt:", { email, password });
-
     const user = await getUserByEmail(email);
 
 
     if (user[0].usertype==1||user[0].password==password){
+      // console.log(user[0]['first_name'])
+
+      setLoginCookie(user[0]['first_name'],user[0]['type'])
       localStorage.setItem("email", user[0].email);
       localStorage.setItem("type", user[0].usertype);
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const emailSalvo = localStorage.getItem("email");
-      console.log("Email salvo localmente:", emailSalvo);
-      window.location.href='/aproval'
+      // const emailSalvo = localStorage.getItem("email");
+      // console.log("Email salvo localmente:", emailSalvo);
+      // window.location.href='/aproval'
+
       
     }
 
